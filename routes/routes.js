@@ -1,27 +1,28 @@
 const express = require('express');
-const Model = require('../models/model');
+const Asset = require('../models/asset');
+const Moment = require('../models/moment');
 const router = express.Router();
 
-//Post Method
-router.post('/post', async (req, res) => {
-    const data = new Model({
-        name: req.body.name,
-        age: req.body.age
+//Post a Moment with a specific timestamp
+router.post('/dnoc/overlay/:overlayId/trigger', async (req, res) => {
+    const data = new Moment({
+        overlayId: req.params.overlayId,
+        timestamp: req.body.timestamp
     })
 
     try {
-        const dataToSave = await data.save();
-        res.status(200).json(dataToSave)
+        const triggerToSave = await data.save();
+        res.status(200).json(triggerToSave)
     }
     catch (error) {
         res.status(400).json({ message: error.message })
     }
 })
 
-//Get all Method
-router.get('/getAll', async (req, res) => {
+//Get all Asset/Events
+router.get('/dnoc/assets', async (req, res) => {
     try {
-        const data = await Model.find();
+        const data = await Asset.find();
         res.json(data)
     }
     catch (error) {
@@ -29,11 +30,11 @@ router.get('/getAll', async (req, res) => {
     }
 })
 
-//Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+//Get all Moments by Asset/Event ID Method
+router.get('/dnoc/asset/:assetId/overlay', async (req, res) => {
     try {
-        const data = await Model.findById(req.params.id);
-        res.json(data)
+        const moments = await Moment.findByAssetId(req.params.assetId);
+        res.json(moments)
     }
     catch (error) {
         res.status(500).json({ message: error.message })
@@ -41,13 +42,11 @@ router.get('/getOne/:id', async (req, res) => {
 })
 
 //Update by ID Method
-router.patch('/update/:id', async (req, res) => {
+router.get('/status/:triggerId', async (req, res) => {
     try {
-        const id = req.params.id;
-        const updatedData = req.body;
-        const options = { new: true };
+        const id = req.params.triggerId;
 
-        const result = await Model.findByIdAndUpdate(
+        const result = await Asset.findByIdAndUpdate(
             id, updatedData, options
         )
 
@@ -55,18 +54,6 @@ router.patch('/update/:id', async (req, res) => {
     }
     catch (error) {
         res.status(500).json({ message: error.message })
-    }
-})
-
-//Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id)
-        res.send(`Document with ${data.name} has been deleted..`)
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message })
     }
 })
 

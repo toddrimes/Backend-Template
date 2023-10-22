@@ -22,6 +22,14 @@ const routes = require('./routes/routes');
 
 app.use('/api', routes)
 
-app.listen(3000, () => {
-    console.log(`Server Started at ${3000}`)
+//Update by ID Method
+app.get('/', (req, res) => {
+    return res.status(200).send({
+        success: 'true',
+        message: 'Hello',
+    });
+})
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server Started at ${process.env.PORT}`)
 })
