@@ -1,0 +1,10 @@
+const mongoose = require('mongoose');
+
+const Template = new mongoose.Schema({
+    htmlCode: {
+        required: true,
+        type: String
+    }
+})
+
+module.exports = mongoose.model('Template')

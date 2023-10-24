@@ -1,0 +1,10 @@
+const mongoose = require('mongoose');
+
+const Asset = new mongoose.Schema({
+    title: {
+        required: true,
+        type: String
+    }
+})
+
+module.exports = mongoose.model('Asset')

@@ -1,0 +1,18 @@
+const mongoose = require('mongoose');
+
+const Trigger = new mongoose.Schema({
+    assetId: {
+        required: true,
+        ref: 'Asset'
+    },
+    overlayId: {
+        required: true,
+        ref: 'Overlay'
+    },
+    timestamp: {
+        required: true,
+        type: Number
+    }
+})
+
+module.exports = mongoose.model('Trigger')

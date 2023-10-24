@@ -1,13 +1,8 @@
 const mongoose = require('mongoose');
 
-const dataSchema = new mongoose.Schema({
+const Overlay = new mongoose.Schema({
     assetId: {
-        required: false,
-        type: String
-    },
-    momentId: {
-        required: true,
-        type: String
+        ref: 'Asset'
     },
     position: {
         required: false,
@@ -28,11 +23,15 @@ const dataSchema = new mongoose.Schema({
     buttonText: {
         required: false,
         type: String
+    },
+    templateId: {
+        required: true,
+        type: String
     }
 })
 
 // syntax
-dataSchema.methods.findByAssetId = function(mAssetId) {
+Overlay.methods.findByAssetId = function(mAssetId) {
     const q = {
         ...query,
         assetId: mAssetId
@@ -40,4 +39,4 @@ dataSchema.methods.findByAssetId = function(mAssetId) {
     return this.find(q, null, {}, next);
 }
 
-module.exports = mongoose.model('Moment', dataSchema)
+module.exports = mongoose.model('Overlay');
