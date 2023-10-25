@@ -15,8 +15,5 @@
     "mongoose": "^6.2.2",
     "nodemon": "^2.0.15",
     "uuid": "^9.0.1"
-  },
-  "devDependencies": {
-    "mongoose-schema-jsonschema": "^2.1.1"
   }
 }
