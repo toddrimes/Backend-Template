@@ -7,6 +7,8 @@ const mongoString = process.env.DATABASE_URL;
 mongoose.connect(mongoString);
 const database = mongoose.connection;
 
+// https://momentsapi-tr-0b46d75889bf.herokuapp.com/api/dnoc/assets HEROKU
+
 database.on('error', (error) => {
     console.log(error)
 })

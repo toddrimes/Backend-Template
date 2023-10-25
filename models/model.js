@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { randomUUID } = require('crypto');
+require('mongoose-schema-jsonschema')(mongoose);
 
 const template = new mongoose.Schema({
     htmlCode: {
@@ -7,6 +7,9 @@ const template = new mongoose.Schema({
         type: String
     }
 })
+
+const jsonTemplateSchema = template.jsonSchema();
+console.dir(jsonTemplateSchema, {depth : null});
 
 const templateSchema = mongoose.model('Template', template);
 
@@ -20,6 +23,9 @@ const asset = new mongoose.Schema({
         type: String
     }
 })
+
+const jsonAssetSchema = asset.jsonSchema();
+console.dir(jsonAssetSchema, {depth : null});
 
 const assetSchema = mongoose.model('Asset', asset);
 
@@ -37,6 +43,9 @@ overlay.static('findByAssetId',
         console.log("searching for " + mAssetId)
         return this.find({ assetId: mAssetId });
     })
+
+const jsonOverlaySchema = overlay.jsonSchema();
+console.dir(jsonOverlaySchema, {depth : null});
 
 const overlaySchema = mongoose.model('Overlay', overlay);
 
@@ -86,6 +95,9 @@ moment.static('findByOverlayId',
         return this.find({ overlayId: mOverlayId });
     })
 
+const jsonMomentSchema = moment.jsonSchema();
+console.dir(jsonMomentSchema, {depth : null});
+
 const momentSchema = mongoose.model('Moment', moment);
 
 const execution = new mongoose.Schema({
@@ -107,6 +119,9 @@ const execution = new mongoose.Schema({
         type: Number
     }
 })
+
+const jsonExecutionSchema = execution.jsonSchema();
+console.dir(jsonExecutionSchema, {depth : null});
 
 const executionSchema = mongoose.model('Execution', execution);
 

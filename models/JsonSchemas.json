@@ -1,0 +1,132 @@
+{
+	"template": {
+		"type": "object",
+		"properties": {
+			"htmlCode": {
+				"type": "string"
+			},
+			"_id": {
+				"type": "string",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			}
+		},
+		"required": [
+			"htmlCode"
+		]
+	},
+	"asset": {
+		"type": "object",
+		"properties": {
+			"assetType": {
+				"type": "string"
+			},
+			"title": {
+				"type": "string"
+			},
+			"_id": {
+				"type": "string",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			}
+		},
+		"required": [
+			"assetType",
+			"title"
+		]
+	},
+	"overlay": {
+		"type": "object",
+		"properties": {
+			"assetId": {
+				"type": "string",
+				"x-ref": "Asset",
+				"description": "Refers to Asset",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			},
+			"_id": {
+				"type": "string",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			}
+		},
+		"required": [
+			"assetId"
+		]
+	},
+	"moment": {
+		"type": "object",
+		"properties": {
+			"overlayId": {
+				"type": "string",
+				"x-ref": "Overlay",
+				"description": "Refers to Overlay",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			},
+			"momentNumber": {
+				"type": "number"
+			},
+			"isLive": {
+				"type": "boolean"
+			},
+			"subtitle": {
+				"type": "string"
+			},
+			"status": {
+				"type": "string",
+				"default": "PUBLISHED"
+			},
+			"title": {
+				"type": "string"
+			},
+			"buttonText": {
+				"type": "string"
+			},
+			"templateId": {
+				"type": "string",
+				"x-ref": "Template",
+				"description": "Refers to Template",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			},
+			"_id": {
+				"type": "string",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			}
+		},
+		"required": [
+			"overlayId",
+			"momentNumber",
+			"isLive",
+			"status",
+			"title",
+			"buttonText",
+			"templateId"
+		]
+	},
+	"execution": {
+		"type": "object",
+		"properties": {
+			"overlayId": {
+				"type": "string",
+				"x-ref": "Overlay",
+				"description": "Refers to Overlay",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			},
+			"momentNumber": {
+				"type": "number"
+			},
+			"status": {
+				"type": "string"
+			},
+			"timecode": {
+				"type": "number"
+			},
+			"_id": {
+				"type": "string",
+				"pattern": "^[0-9a-fA-F]{24}$"
+			}
+		},
+		"required": [
+			"overlayId",
+			"momentNumber",
+			"timecode"
+		]
+	}
+}
