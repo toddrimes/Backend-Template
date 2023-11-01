@@ -11,7 +11,7 @@ const server = http.createServer(app);
 const {AppState} = require("./models/model");
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://localhost:5500",
+        origin: ['http://localhost:*', 'https://momentsapi-tr-0b46d75889bf.herokuapp.com/:*'],
         methods: ["GET", "POST"]
     }
 });
