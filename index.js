@@ -4,12 +4,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const mongoString = process.env.DATABASE_URL;
 const database = mongoose.connection;
-const socketIO = require("socket.io");
 const PORT = process.env.PORT || 5501;
-const app = express();
 const http = require("http");
-const sever = http.createServer(app);
-const io = socketIO();
+const app = express();
+const server = http.createServer(app);
+const {AppState} = require("./models/model");
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "http://localhost:5500",
+        methods: ["GET", "POST"]
+    }
+});
 
 mongoose.connect(mongoString);
 
@@ -35,16 +40,41 @@ app.use((req, res, next) => {
     next();
 });
 
-io.on("connection", async (socket) => {
-    console.log("A user connected", socket.id);
+io.on('connection', (socket) => {
+    console.log('A user connected');
 
-    socket.on("chat message", async (message) => {
-        console.log("message from client", JSON.parse(message));
-        io.emit("chat message", JSON.stringify(sendMessage));
+    // Listen for state changes from clients
+    socket.on('init', (contentId) => {
+        console.log('init with contentId : ' + contentId);
+        // Broadcast the newState to all connected clients
+        AppState.findById(
+            contentId
+        )
+        .then((data) => {
+            console.dir(data);
+            if(data){
+                io.to(socket.id).emit('stateChange', data);
+            }
+        });
     });
-    // Handle disconnect event
-    socket.on("disconnect", () => {
-        console.log("A user disconnected");
+
+    // Listen for state changes from clients
+    socket.on('stateChange', (newState) => {
+        console.log('stateChange');
+        console.dir(newState);
+        // Broadcast the newState to all connected clients
+        const filter = {_id: newState.contentId};
+        const update = {lists: newState.lists};
+        AppState.findOneAndUpdate(filter, update,{new: true, upsert: true})
+        .then((data) => {
+            console.dir(data);
+        });
+        io.emit('stateChange', newState);
+    });
+
+    // Handle disconnections
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
     });
 });
 
@@ -60,6 +90,6 @@ app.get('/', (req, res) => {
     });
 })
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server Started at ${process.env.PORT}`)
 })

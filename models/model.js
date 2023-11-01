@@ -109,4 +109,17 @@ const execution = new mongoose.Schema({
 
 const executionSchema = mongoose.model('Execution', execution);
 
-module.exports = { Template: templateSchema, Asset: assetSchema, Overlay: overlaySchema, Moment: momentSchema, Execution: executionSchema }
+const appState = new mongoose.Schema({
+    _id: {
+        required: [true, "contentId is required"],
+        type: String
+    },
+    lists: {
+        required: [true, "lists is required"],
+        type: Object
+    }
+})
+
+const appStateSchema = mongoose.model('AppState', appState);
+
+module.exports = { Template: templateSchema, Asset: assetSchema, Overlay: overlaySchema, Moment: momentSchema, Execution: executionSchema , AppState: appStateSchema }

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {Template, Asset, Overlay, Moment, Execution} = require('../models/model');
+const {Template, Asset, Overlay, Moment, Execution, AppState } = require('../models/model');
 const router = express.Router();
 
 //Update an Overlay with a specific timestamp
@@ -193,5 +193,33 @@ router.get('/dnoc/asset/:assetId/overlay', async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 })*/
+
+//POST a new or updated AppState
+router.post('/dnoc/appstate/:contentId', async (req, res) => {
+    const data = new AppState({
+        _id: req.body.contentId,
+        lists: req.body.lists
+    })
+    try {
+        const appStateToSave = await data.save();
+        res.status(200).json(appStateToSave)
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+})
+
+//Get an AppState by contentId
+router.get('/dnoc/appstate/:contentId', async (req, res) => {
+    try {
+        const _id = req.params.contentId;
+        const appState = await AppState.findById(
+            _id
+        )
+        res.json(appState)
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+})
 
 module.exports = router;
