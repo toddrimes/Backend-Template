@@ -9,10 +9,12 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const {AppState} = require("./models/model");
-const io = require("socket.io")(server, {
+const socketio = require("socket.io");
+const io = socketio(server, {
     cors: {
-        origin: ['*'],
-        methods: ["GET", "POST"]
+        origin: `*`,
+        methods: ["GET", "POST"],
+        credentials: false
     }
 });
 
