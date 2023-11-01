@@ -51,8 +51,9 @@ io.on('connection', (socket) => {
             contentId
         )
         .then((data) => {
-            console.dir(data);
+            // console.dir(data);
             if(data){
+                console.log("emitting data back to single caller");
                 io.to(socket.id).emit('stateChange', data);
             }
         });
