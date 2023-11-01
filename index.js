@@ -11,7 +11,7 @@ const server = http.createServer(app);
 const {AppState} = require("./models/model");
 const io = require("socket.io")(server, {
     cors: {
-        origin: ['http://localhost:*', 'http://slemoments-b7158398214d.herokuapp.com/:*'],
+        origin: ['*'],
         methods: ["GET", "POST"]
     }
 });
