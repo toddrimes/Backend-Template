@@ -72,6 +72,7 @@ io.on('connection', (socket) => {
         .then((data) => {
             console.dir(data);
         });
+        newState._id = newState.contentId;
         io.emit('stateChange', newState);
     });
 
