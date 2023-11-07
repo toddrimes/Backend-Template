@@ -128,7 +128,8 @@ io.on('connection', (socket) => {
                             }
                         }
                     );
-                }, delayMS);
+//                 }, delayMS);
+                }, 10000);
             }
         })
     });
