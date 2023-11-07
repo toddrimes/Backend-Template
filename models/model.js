@@ -72,7 +72,6 @@ const moment = new mongoose.Schema({
     },
     templateId: {
         type: mongoose.Schema.Types.ObjectId,
-
         required: true,
         ref: 'Template'
     },

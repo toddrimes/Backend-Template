@@ -89,12 +89,13 @@ router.get('/dnoc/assets/:assetId/overlay', async (req, res) => {
             console.log("momentsToSave is " + momentsToSave);
             for (let j = 0; j < momentsToSave.length; j++){
                 let moment = momentsToSave[j];
-                let simpleMoment = {
+/*                let simpleMoment = {
                     "momentNumber": moment.momentNumber,
                     "status": moment.status,
                     "title": moment.title,
-                }
-                result.moments.push(simpleMoment)
+                }*/
+                result.moments.push(moment);
+                console.log(moment);
             }
         }
         res.status(200).json(result)

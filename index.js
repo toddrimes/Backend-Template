@@ -8,8 +8,10 @@ const PORT = process.env.PORT || 5501;
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
-const {AppState} = require("./models/model");
+const {AppState, Template} = require("./models/model");
 const socketio = require("socket.io");
+const Mustache = require('mustache');
+const mqtt = require('mqtt');
 const io = socketio(server, {
     cors: {
         origin: `*`,
@@ -17,6 +19,23 @@ const io = socketio(server, {
         credentials: false
     }
 });
+
+function renderLaunch(markup, mObject) {
+    const rendered = Mustache.render(markup, mObject);
+    return rendered;
+}
+function fetchTemplate(templateId) {
+    let markup =  Template.findById(
+        templateId
+    )
+    .then((data) => {
+        // console.dir(data);
+        if(data){
+            return data.htmlCode;
+        }
+    });
+    return markup;
+}
 
 mongoose.connect(mongoString);
 
@@ -41,6 +60,18 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+// MQTT CLIENT SETUP // MQTT CLIENT SETUP // MQTT CLIENT SETUP // MQTT CLIENT SETUP // MQTT CLIENT SETUP
+const url = 'wss://bwmmoe.stackhero-network.com:443/mqtt';
+const username = 'node-red';
+const password = 'nji0OM7MBBSlw7qMTfk6sn5PDX6rPKwo';
+console.log('⏳ Connecting to MQTT server ' + url + '...');
+const client = mqtt.connect(url, { username, password });
+client.on('error', function (error) {console.log('🚨 Error: ' + error);});
+client.on('close', function () {console.log('🔌 Connection has been closed');});
+client.on('reconnect', function () {console.log('⏳ Reconnecting...');});
+client.on('connect', function () {console.log('✅ Connected!');});
+// END MQTT CLIENT SETUP // END MQTT CLIENT SETUP // END MQTT CLIENT SETUP // END MQTT CLIENT SETUP // END MQTT CLIENT SETUP
 
 io.on('connection', (socket) => {
     console.log('A user connected');
@@ -74,6 +105,32 @@ io.on('connection', (socket) => {
         });
         newState._id = newState.contentId;
         io.emit('stateChange', newState);
+        let firstKey = Object.keys(newState.lists)[0];
+        let moments = newState.lists[firstKey];
+        moments.map((moment) => {
+            let nowMS = new Date().getTime();
+            if(moment.phase == "launched" && moment.timecode > nowMS){
+                // let markup = fetchTemplate(moment.templateId || '65366c268b981eca359b04a2');
+                let markup = '<!-- div id="la-moment" --><div id="la-lefts"><img id="la-image" src="http://localhost:5500/pic{{momentNumber}}.png"/>{{#isLive}}<div id="la-live">Live</div>{{/isLive}}</div><div id="la-texts"><div id="la-subtitle">{{subtitle}}</div><div id="la-title">{{title}}</div><div id="la-cta"><span class="la-flatten">{{buttonText}}</span></div></div><!-- /div -->';
+                let delayMS = nowMS - moment.timecode;
+                let finalMarkup = renderLaunch(markup, moment);
+                setTimeout(() => {
+                    // send mqtt broker the markup
+                    client.publish(
+                        'moments',
+                        finalMarkup,
+                        { qos: 2 },
+                        function(err) {
+                            if (err) {
+                                console.log('🚨 Error when publishing to topic ' + topic + ': ' + err);
+                            } else {
+                                console.log('Sent + ' + finalMarkup)
+                            }
+                        }
+                    );
+                }, delayMS);
+            }
+        })
     });
 
     // Handle disconnections
@@ -83,6 +140,7 @@ io.on('connection', (socket) => {
 });
 
 const routes = require('./routes/routes');
+const {render} = require("express/lib/application");
 
 app.use('/api', routes)
 
