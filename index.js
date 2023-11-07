@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
             let nowMS = new Date().getTime();
             if(moment.phase == "launched" && moment.timecode > nowMS){
                 // let markup = fetchTemplate(moment.templateId || '65366c268b981eca359b04a2');
-                let markup = '<!-- div id="la-moment" --><div id="la-lefts"><img id="la-image" src="http://localhost:5500/pic{{momentNumber}}.png"/>{{#isLive}}<div id="la-live">Live</div>{{/isLive}}</div><div id="la-texts"><div id="la-subtitle">{{subtitle}}</div><div id="la-title">{{title}}</div><div id="la-cta"><span class="la-flatten">{{buttonText}}</span></div></div><!-- /div -->';
+                let markup = '<!-- div id="la-moment" --><div id="la-lefts"><img id="la-image" src="https://slemoments-b7158398214d.herokuapp.com/pic{{momentNumber}}.png"/>{{#isLive}}<div id="la-live">Live</div>{{/isLive}}</div><div id="la-texts"><div id="la-subtitle">{{subtitle}}</div><div id="la-title">{{title}}</div><div id="la-cta"><span class="la-flatten">{{buttonText}}</span></div></div><!-- /div -->';
                 let delayMS = nowMS - moment.timecode;
                 let finalMarkup = renderLaunch(markup, moment);
                 setTimeout(() => {
